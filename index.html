@@ -1,0 +1,1103 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapa das Bibliotecas Comunitárias de Granja CE</title>
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <!-- Font Awesome para ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --accent-color: #e74c3c;
+            --dark-color: #2c3e50;
+            --light-color: #ecf0f1;
+            --gradient: linear-gradient(135deg, #3498db, #2ecc71);
+            --shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            --radius: 12px;
+        }
+
+        body {
+            background-color: #f9fbfd;
+            color: #333;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Header Moderno */
+        header {
+            background: var(--gradient);
+            color: white;
+            padding: 1.2rem 0;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+            z-index: 1000;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            background: rgba(255, 255, 255, 0.2);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            backdrop-filter: blur(5px);
+        }
+
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .logo p {
+            font-size: 0.85rem;
+            opacity: 0.9;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border-radius: 30px;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            backdrop-filter: blur(5px);
+        }
+
+        .btn-primary:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .btn-contact {
+            background: #25D366;
+            color: white;
+        }
+
+        .btn-contact:hover {
+            background: #20b858;
+            transform: translateY(-2px);
+        }
+
+        /* Banner Rotativo */
+        .banner-container {
+            background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+            padding: 1rem;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .banner-slide {
+            display: none;
+            animation: fadeIn 1s ease;
+        }
+
+        .banner-slide.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .banner-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+        }
+
+        .banner-subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        /* Conteúdo Principal */
+        .main-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        /* Dashboard */
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+        }
+
+        .dashboard-card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .dashboard-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.8rem;
+            color: var(--primary-color);
+        }
+
+        .dashboard-number {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--dark-color);
+            margin-bottom: 0.3rem;
+        }
+
+        .dashboard-label {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+            font-weight: 500;
+        }
+
+        /* Container do Mapa */
+        .map-container {
+            position: relative;
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            height: 500px;
+        }
+
+        #map {
+            height: 100%;
+            width: 100%;
+            border-radius: var(--radius);
+        }
+
+        /* Seção de Bibliotecas */
+        .libraries-section {
+            background: white;
+            border-radius: var(--radius);
+            padding: 2rem;
+            box-shadow: var(--shadow);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--dark-color);
+        }
+
+        .search-container {
+            display: flex;
+            position: relative;
+            width: 300px;
+        }
+
+        .search-box {
+            display: flex;
+            width: 100%;
+        }
+
+        .search-box input {
+            flex: 1;
+            padding: 0.9rem 1rem 0.9rem 3rem;
+            border: 2px solid #eef2f7;
+            border-radius: 30px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            background: #f9fbfd;
+            width: 100%;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1.2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #7f8c8d;
+            z-index: 10;
+        }
+
+        .libraries-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .library-card {
+            background-color: white;
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid #eef2f7;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .library-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            border-color: var(--primary-color);
+        }
+
+        .library-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .library-card h3 {
+            color: var(--dark-color);
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            flex: 1;
+        }
+
+        .library-number {
+            background: var(--gradient);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .library-card p {
+            font-size: 0.95rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .library-services {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: auto;
+            padding-top: 1rem;
+        }
+
+        .service-tag {
+            background-color: #e8f4fc;
+            color: var(--primary-color);
+            font-size: 0.75rem;
+            padding: 0.4rem 0.8rem;
+            border-radius: 15px;
+            font-weight: 500;
+        }
+
+        /* Modal Moderno */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background-color: white;
+            border-radius: var(--radius);
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            animation: modalFadeIn 0.4s ease;
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--gradient);
+            color: white;
+            border-radius: var(--radius) var(--radius) 0 0;
+        }
+
+        .modal-header h2 {
+            color: white;
+            font-weight: 600;
+            font-size: 1.5rem;
+        }
+
+        .close-modal {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: white;
+        }
+
+        .close-modal:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(90deg);
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .library-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .library-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .detail-group {
+            margin-bottom: 1.2rem;
+        }
+
+        .detail-group h3 {
+            font-size: 1.1rem;
+            color: var(--dark-color);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .detail-group h3 i {
+            color: var(--primary-color);
+        }
+
+        .services-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark-color);
+            color: white;
+            padding: 2rem 0;
+            margin-top: 2rem;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .footer-logo i {
+            font-size: 1.8rem;
+            color: var(--secondary-color);
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .footer-links a {
+            color: #bdc3c7;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        /* Responsividade */
+        @media (max-width: 1200px) {
+            .libraries-grid {
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            }
+        }
+
+        @media (max-width: 992px) {
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .search-container {
+                width: 100%;
+            }
+
+            .library-details {
+                grid-template-columns: 1fr;
+            }
+
+            .dashboard {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                gap: 1.5rem;
+                text-align: center;
+            }
+
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+
+            .libraries-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .map-container {
+                height: 400px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 1rem;
+            }
+
+            .libraries-section {
+                padding: 1.5rem;
+            }
+
+            .modal-body {
+                padding: 1rem;
+            }
+
+            .banner-title {
+                font-size: 1.2rem;
+            }
+
+            .banner-subtitle {
+                font-size: 0.9rem;
+            }
+
+            .section-title {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-book-open"></i>
+                    </div>
+                    <div class="logo-text">
+                        <h1>Mapa Cultural de Granja</h1>
+                        <p>Bibliotecas Comunitárias</p>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-primary" id="about-btn">
+                        <i class="fas fa-info-circle"></i> Sobre
+                    </button>
+                    <a href="https://wa.link/vabdfe" target="_blank" class="btn btn-contact">
+                        <i class="fab fa-whatsapp"></i> Contato
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <!-- Banner Rotativo -->
+        <div class="banner-container">
+            <div class="banner-slide active">
+                <div class="banner-title">📚 Descubra as Bibliotecas de Granja!</div>
+                <div class="banner-subtitle">7 espaços culturais esperando por você</div>
+            </div>
+            <div class="banner-slide">
+                <div class="banner-title">👧🏻👦🏻 245 Crianças Atendidas</div>
+                <div class="banner-subtitle">Juntos transformando vidas através da leitura</div>
+            </div>
+            <div class="banner-slide">
+                <div class="banner-title">📍 5 Bairros Atendidos</div>
+                <div class="banner-subtitle">Levando cultura para toda a comunidade</div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <!-- Dashboard -->
+            <div class="dashboard">
+                <div class="dashboard-card">
+                    <div class="dashboard-icon">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <div class="dashboard-number" id="total-libraries">7</div>
+                    <div class="dashboard-label">Bibliotecas Mapeadas</div>
+                </div>
+                <div class="dashboard-card">
+                    <div class="dashboard-icon">
+                        <i class="fas fa-child"></i>
+                    </div>
+                    <div class="dashboard-number">245</div>
+                    <div class="dashboard-label">Crianças Atendidas</div>
+                </div>
+                <div class="dashboard-card">
+                    <div class="dashboard-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <div class="dashboard-number">5</div>
+                    <div class="dashboard-label">Bairros Atendidos</div>
+                </div>
+            </div>
+
+            <!-- Mapa -->
+            <div class="map-container">
+                <div id="map"></div>
+            </div>
+
+            <!-- Lista de Bibliotecas -->
+            <div class="libraries-section">
+                <div class="section-header">
+                    <h2 class="section-title">Bibliotecas Comunitárias</h2>
+                    <div class="search-container">
+                        <i class="fas fa-search search-icon"></i>
+                        <div class="search-box">
+                            <input type="text" id="search-input" placeholder="Buscar biblioteca...">
+                        </div>
+                    </div>
+                </div>
+                <div class="libraries-grid" id="libraries-grid">
+                    <!-- Cards das bibliotecas serão inseridos via JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <i class="fas fa-book"></i>
+                    <span>Mapa das Bibliotecas Comunitárias de Granja CE</span>
+                </div>
+                <div class="footer-links">
+                    <a href="#" id="footer-about">Sobre</a>
+                    <a href="https://wa.link/vabdfe" target="_blank">Contato</a>
+                    <a href="https://www.instagram.com/liradutraoficial/" target="_blank">Instagram</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Modal de detalhes da biblioteca -->
+    <div class="modal" id="library-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title">Detalhes da Biblioteca</h2>
+                <button class="close-modal" id="close-modal">&times;</button>
+            </div>
+            <div class="modal-body" id="modal-body">
+                <!-- Conteúdo do modal será inserido via JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <script>
+        // Dados atualizados das bibliotecas com coordenadas baseadas no OpenStreetMap de Granja
+        const librariesData = [
+            {
+                id: 1,
+                nome: "Biblioteca Luz da Sabedoria",
+                fundador: "Pedu Bio",
+                endereco: "Rua Pará",
+                bairro: "São Pedro",
+                servicos: ["Empréstimo de livros", "Leitura no local", "Atividades infantis", "Oficinas de leitura"],
+                contato: "(88) 3456-7890",
+                horario: "Segunda a Sexta, 8h às 17h",
+                imagem: "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
+                lat: -3.12145,
+                lng: -40.82946
+            },
+            {
+                id: 2,
+                nome: "Biblioteca Novo Mocozal",
+                fundador: "Geysy",
+                endereco: "Rua Lagoa Grande",
+                bairro: "Fátima",
+                servicos: ["Empréstimo de livros", "Acesso à internet", "Cursos de alfabetização", "Grupo de estudos"],
+                contato: "(88) 3456-7891",
+                horario: "Terça a Sábado, 9h às 18h",
+                imagem: "https://images.unsplash.com/photo-1507842217343-583bb7270b66?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
+                lat: -3.12200,
+                lng: -40.82800
+            },
+            {
+                id: 3,
+                nome: "Biblioteca Gael & Amigos",
+                fundador: "Jorgiana",
+                endereco: "Rua 106",
+                bairro: "Oiteiro",
+                servicos: ["Empréstimo de livros", "Contação de histórias", "Oficinas criativas", "Eventos culturais"],
+                contato: "(88) 3456-7892",
+                horario: "Segunda a Sexta, 10h às 16h",
+                imagem: "https://images.unsplash.com/photo-1568667256549-094345857637?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
+                lat: -3.12000,
+                lng: -40.82700
+            },
+            {
+                id: 4,
+                nome: "Biblioteca Vidas Maria",
+                fundador: "Antônia de Maria",
+                endereco: "Rua do Mocozal",
+                bairro: "Fátima",
+                servicos: ["Empréstimo de livros", "Grupo de leitura", "Apoio escolar", "Oficinas para mulheres"],
+                contato: "(88) 3456-7893",
+                horario: "Segunda a Sexta, 8h às 12h e 14h às 18h",
+                imagem: "https://images.unsplash.com/photo-1524578271613-d550eacf6090?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
+                lat: -3.12300,
+                lng: -40.83000
+            },
+            {
+                id: 5,
+                nome: "Biblioteca Letícia e Amigos",
+                fundador: "Maria do Livramento",
+                endereco: "Rua Espírito Santo",
+                bairro: "São Pedro",
+                servicos: ["Empréstimo de livros", "Atividades culturais", "Biblioteca infantil", "Clube do livro"],
+                contato: "(88) 3456-7894",
+                horario: "Terça a Domingo, 9h às 17h",
+                imagem: "https://images.unsplash.com/photo-1532012197267-da84d127e765?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
+                lat: -3.11900,
+                lng: -40.82600
+            },
+            {
+                id: 6,
+                nome: "Biblioteca Esperançar",
+                fundador: "Inaugurada em 25 de outubro",
+                endereco: "Rua Vila Portelinha III",
+                bairro: "Campo de Aviação",
+                servicos: ["Empréstimo de livros", "Oficinas de arte", "Apoio à pesquisa", "Eventos comunitários"],
+                contato: "(88) 3456-7895",
+                horario: "Segunda a Sexta, 8h às 17h; Sábado, 8h às 12h",
+                imagem: "https://images.unsplash.com/photo-1568667256549-094345857637?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
+                lat: -3.12400,
+                lng: -40.83100
+            },
+            {
+                id: 7,
+                nome: "Biblioteca Maria Mocó",
+                fundador: "Inaugurada em novembro",
+                endereco: "Rua Conjunto Pro Moradia Quadra B",
+                bairro: "Campo de Aviação",
+                servicos: ["Empréstimo de livros", "Clube do livro", "Aulas de reforço", "Oficinas de leitura"],
+                contato: "(88) 3456-7896",
+                horario: "Segunda a Sexta, 9h às 17h",
+                imagem: "https://images.unsplash.com/photo-1524578271613-d550eacf6090?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
+                lat: -3.12500,
+                lng: -40.83200
+            }
+        ];
+
+        // Inicialização do mapa com foco em Granja
+        let map = L.map('map').setView([-3.12145, -40.82946], 15);
+
+        // Adicionando camada do OpenStreetMap
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Variáveis globais
+        let markers = [];
+        let bannerInterval;
+
+        // Elementos DOM
+        const librariesGrid = document.getElementById('libraries-grid');
+        const searchInput = document.getElementById('search-input');
+        const libraryModal = document.getElementById('library-modal');
+        const closeModal = document.getElementById('close-modal');
+        const modalTitle = document.getElementById('modal-title');
+        const modalBody = document.getElementById('modal-body');
+        const totalLibraries = document.getElementById('total-libraries');
+        const aboutBtn = document.getElementById('about-btn');
+        const footerAbout = document.getElementById('footer-about');
+
+        // Inicialização da aplicação
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeApp();
+        });
+
+        function initializeApp() {
+            // Renderizar bibliotecas
+            renderLibraries(librariesData);
+            
+            // Adicionar marcadores ao mapa
+            addMarkersToMap(librariesData);
+            
+            // Configurar event listeners
+            setupEventListeners();
+            
+            // Iniciar banner rotativo
+            startBannerRotation();
+        }
+
+        function renderLibraries(libraries) {
+            librariesGrid.innerHTML = '';
+            
+            if (libraries.length === 0) {
+                librariesGrid.innerHTML = `
+                    <div style="text-align: center; padding: 2rem; color: #7f8c8d; grid-column: 1 / -1;">
+                        <i class="fas fa-search" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                        <h3 style="margin-bottom: 0.5rem;">Nenhuma biblioteca encontrada</h3>
+                        <p>Tente ajustar os termos da sua busca</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            libraries.forEach((library, index) => {
+                const card = document.createElement('div');
+                card.className = 'library-card';
+                card.dataset.id = library.id;
+                
+                card.innerHTML = `
+                    <div class="library-header">
+                        <h3>${library.nome}</h3>
+                        <div class="library-number">${index + 1}</div>
+                    </div>
+                    <p><i class="fas fa-user"></i> ${library.fundador}</p>
+                    <p><i class="fas fa-map-marker-alt"></i> ${library.endereco}, ${library.bairro}</p>
+                    <div class="library-services">
+                        ${library.servicos.slice(0, 3).map(service => `<span class="service-tag">${service}</span>`).join('')}
+                        ${library.servicos.length > 3 ? `<span class="service-tag">+${library.servicos.length - 3}</span>` : ''}
+                    </div>
+                `;
+                
+                card.addEventListener('click', function() {
+                    showLibraryDetails(library.id);
+                });
+                
+                librariesGrid.appendChild(card);
+            });
+        }
+
+        function addMarkersToMap(libraries) {
+            // Limpar marcadores existentes
+            markers.forEach(marker => map.removeLayer(marker));
+            markers = [];
+            
+            // Ícone personalizado
+            const libraryIcon = L.divIcon({
+                className: 'library-marker',
+                html: '<i class="fas fa-book"></i>',
+                iconSize: [35, 35],
+                iconAnchor: [17, 17]
+            });
+            
+            libraries.forEach(library => {
+                const marker = L.marker([library.lat, library.lng], {icon: libraryIcon})
+                    .addTo(map)
+                    .bindPopup(`
+                        <div style="min-width: 220px;">
+                            <h3 style="margin: 0 0 10px 0; color: #2c3e50; font-size: 1.2rem;">${library.nome}</h3>
+                            <p style="margin: 0 0 5px 0; color: #7f8c8d;">${library.endereco}, ${library.bairro}</p>
+                            <button onclick="showLibraryDetails(${library.id})" style="margin-top: 10px; padding: 8px 15px; background: #3498db; color: white; border: none; border-radius: 4px; cursor: pointer; width: 100%;">
+                                Ver detalhes
+                            </button>
+                        </div>
+                    `);
+                
+                marker.libraryId = library.id;
+                markers.push(marker);
+            });
+            
+            // Adicionar estilo CSS para os marcadores
+            const style = document.createElement('style');
+            style.textContent = `
+                .library-marker {
+                    background: #3498db;
+                    border: 3px solid white;
+                    border-radius: 50%;
+                    width: 35px;
+                    height: 35px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    color: white;
+                    box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+                    font-size: 16px;
+                }
+            `;
+            document.head.appendChild(style);
+        }
+
+        function filterLibraries() {
+            let filteredLibraries = librariesData;
+            
+            // Aplicar busca por texto
+            const searchText = searchInput.value.toLowerCase().trim();
+            if (searchText) {
+                filteredLibraries = filteredLibraries.filter(library => {
+                    return library.nome.toLowerCase().includes(searchText) || 
+                           library.endereco.toLowerCase().includes(searchText) || 
+                           library.bairro.toLowerCase().includes(searchText) ||
+                           library.fundador.toLowerCase().includes(searchText);
+                });
+            }
+            
+            renderLibraries(filteredLibraries);
+            addMarkersToMap(filteredLibraries);
+            
+            // Ajustar visualização do mapa para mostrar todos os marcadores
+            if (filteredLibraries.length > 0) {
+                const group = new L.featureGroup(markers);
+                map.fitBounds(group.getBounds().pad(0.1));
+            }
+        }
+
+        function showLibraryDetails(libraryId) {
+            const library = librariesData.find(lib => lib.id === libraryId);
+            if (!library) return;
+            
+            modalTitle.textContent = library.nome;
+            
+            modalBody.innerHTML = `
+                <img src="${library.imagem}" alt="${library.nome}" class="library-image">
+                <div class="library-details">
+                    <div class="detail-group">
+                        <h3><i class="fas fa-user"></i> Fundador/Inauguração</h3>
+                        <p>${library.fundador}</p>
+                    </div>
+                    <div class="detail-group">
+                        <h3><i class="fas fa-map-marker-alt"></i> Endereço</h3>
+                        <p>${library.endereco}, ${library.bairro}</p>
+                    </div>
+                    <div class="detail-group">
+                        <h3><i class="fas fa-phone"></i> Contato</h3>
+                        <p>${library.contato}</p>
+                    </div>
+                    <div class="detail-group">
+                        <h3><i class="fas fa-clock"></i> Horário de Funcionamento</h3>
+                        <p>${library.horario}</p>
+                    </div>
+                    <div class="detail-group">
+                        <h3><i class="fas fa-concierge-bell"></i> Serviços Oferecidos</h3>
+                        <div class="services-list">
+                            ${library.servicos.map(service => `<span class="service-tag">${service}</span>`).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            libraryModal.style.display = 'flex';
+        }
+
+        function startBannerRotation() {
+            let currentSlide = 0;
+            const slides = document.querySelectorAll('.banner-slide');
+            
+            bannerInterval = setInterval(() => {
+                slides[currentSlide].classList.remove('active');
+                currentSlide = (currentSlide + 1) % slides.length;
+                slides[currentSlide].classList.add('active');
+            }, 4000);
+        }
+
+        function showAboutModal() {
+            modalTitle.textContent = "Sobre o Projeto";
+            modalBody.innerHTML = `
+                <div style="text-align: center; padding: 1rem;">
+                    <div style="font-size: 3rem; color: #3498db; margin-bottom: 1rem;">
+                        <i class="fas fa-book-open"></i>
+                    </div>
+                    <h3 style="margin-bottom: 1rem;">Mapa das Bibliotecas Comunitárias de Granja CE</h3>
+                    <p style="margin-bottom: 1.5rem;">Este projeto visa mapear e divulgar as bibliotecas comunitárias da cidade de Granja, no Ceará, facilitando o acesso da população a esses importantes espaços de cultura e conhecimento.</p>
+                    
+                    <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0;">
+                        <h4 style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 1rem;">
+                            <i class="fas fa-user-tie" style="color: #3498db;"></i>
+                            Sobre o Criador
+                        </h4>
+                        <p style="margin-bottom: 1rem;">Este mapa foi criado pelo <strong>professor, escritor e agente cultural Lira Dutra</strong>, dedicado a promover a leitura e a cultura na região de Granja-CE.</p>
+                        <a href="https://www.instagram.com/liradutraoficial/" target="_blank" style="display: inline-flex; align-items: center; gap: 8px; color: #3498db; text-decoration: none; font-weight: 500;">
+                            <i class="fab fa-instagram"></i> @liradutraoficial
+                        </a>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; text-align: left; margin-top: 1.5rem;">
+                        <div>
+                            <h4><i class="fas fa-check-circle" style="color: #2ecc71;"></i> Objetivos</h4>
+                            <ul style="padding-left: 1.2rem;">
+                                <li>Divulgar bibliotecas comunitárias</li>
+                                <li>Facilitar o acesso à informação</li>
+                                <li>Promover a leitura</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4><i class="fas fa-users" style="color: #3498db;"></i> Público</h4>
+                            <ul style="padding-left: 1.2rem;">
+                                <li>Comunidade em geral</li>
+                                <li>Estudantes</li>
+                                <li>Educadores</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+            libraryModal.style.display = 'flex';
+        }
+
+        function setupEventListeners() {
+            // Busca em tempo real
+            searchInput.addEventListener('input', filterLibraries);
+            
+            // Fechar modal
+            closeModal.addEventListener('click', function() {
+                libraryModal.style.display = 'none';
+            });
+            
+            // Fechar modal ao clicar fora
+            libraryModal.addEventListener('click', function(event) {
+                if (event.target === libraryModal) {
+                    libraryModal.style.display = 'none';
+                }
+            });
+            
+            // Botão sobre
+            aboutBtn.addEventListener('click', showAboutModal);
+            footerAbout.addEventListener('click', showAboutModal);
+        }
+
+        // Expor função globalmente para uso nos popups
+        window.showLibraryDetails = showLibraryDetails;
+    </script>
+</body>
+</html>
