@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redação sem Complicação • Lira Dutra</title>
+
+    <style>
+        :root {
+            --roxo: #6c63ff;
+            --azul: #00bcd4;
+            --amarelo: #ffca28;
+            --fundo: #f5f6fa;
+            --dark: #2a2a72;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background: var(--fundo);
+            color: #333;
+            line-height: 1.6;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--dark), var(--roxo));
+            color: white;
+            padding: 40px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .header-content {
+            flex: 1;
+            min-width: 300px;
+            max-width: 500px;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.2em;
+            line-height: 1.2;
+        }
+
+        header p {
+            margin-top: 10px;
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .header-banner {
+            max-width: 350px;
+            width: 100%;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        main {
+            padding: 30px 15px;
+            max-width: 1000px;
+            margin: auto;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            border-top: 5px solid transparent;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            border-top-color: var(--amarelo);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.1);
+        }
+
+        .card span { font-size: 3em; display: block; margin-bottom: 10px; }
+        .card h3 { margin: 0; color: var(--dark); }
+
+        .section {
+            display: none;
+            background: white;
+            margin-top: 30px;
+            padding: 35px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            animation: slideUp 0.5s ease;
+        }
+
+        .section.active { display: block; }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        textarea {
+            width: 100%;
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px solid #eee;
+            margin-top: 10px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--roxo);
+        }
+
+        .drop-zone {
+            border: 2px dashed #bbb;
+            padding: 20px;
+            text-align: center;
+            border-radius: 10px;
+            background: #f9f9f9;
+            margin-top: 10px;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .drag-item {
+            background: var(--roxo);
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: move;
+            margin: 5px;
+            font-size: 0.9em;
+        }
+
+        button {
+            background: var(--roxo);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        button.btn-voltar { background: #666; }
+
+        footer {
+            background: var(--dark);
+            color: white;
+            text-align: center;
+            padding: 30px;
+            margin-top: 50px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0; top: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7);
+        }
+
+        .modal-content {
+            background: white;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="header-content">
+        <h1>Redação sem Complicação</h1>
+        <p>Foco no sucesso!</p>
+    </div>
+    <img src="https://raw.githubusercontent.com/macaboqueira/bibliotecas/refs/heads/main/bannerredacao.png" alt="Banner Redação sem Complicação" class="header-banner">
+</header>
+
+<main>
+    <div class="cards">
+        <div class="card" onclick="abrir('oquee')">
+            <span>📘</span>
+            <h3>O que é Redação?</h3>
+        </div>
+        <div class="card" onclick="abrir('dissertativo')">
+            <span>🧠</span>
+            <h3>O que é um texto dissertativo</h3>
+        </div>
+        <div class="card" onclick="abrir('jogo')">
+            <span>🎮</span>
+            <h3>Teste rápido</h3>
+        </div>
+        <div class="card" onclick="abrir('escrever')">
+            <span>✍️</span>
+            <h3>Escreva sua Redação sem medo</h3>
+        </div>
+    </div>
+
+    <!-- Seção: O que é -->
+    <div id="oquee" class="section">
+        <h2>O que é Redação?</h2>
+        <p>
+Elaborar uma redação nota 1000 não é uma tarefa impossível para ninguém.
+        </p>
+        <p>
+        A redação é um processo de escrita cujo objetivo é expressar informações de forma analógica ou digital. Trata-se da organização de um texto por meio da articulação entre palavras, orações e parágrafos, com a finalidade de transmitir uma mensagem clara e coerente ao leitor.    
+        </p>
+        <p>
+           A escrita é uma prática presente no cotidiano de todas as pessoas e exerce papel fundamental na comunicação social. 
+        </p>
+        <p>
+As características de uma redação variam de acordo com o tipo e o gênero textual ao qual ela pertence, aspectos que serão abordados posteriormente. Ao escrever uma carta, por exemplo, que pressupõe maior proximidade com o leitor e segue uma estrutura própria, não é possível publicá-la como uma notícia jornalística, pois cada gênero possui normas e finalidades específicas.
+        </p>
+        <p>
+O objetivo de uma redação é determinado pelo propósito do autor e pelo gênero textual escolhido para a escrita.
+
+No caso da redação dissertativo-argumentativa, exigida no Exame Nacional do Ensino Médio (Enem), o objetivo principal é defender uma tese e persuadir o leitor por meio de argumentos bem fundamentados e organizados de forma lógica.
+        </p>
+        <button class="btn-voltar" onclick="fechar()">Voltar</button>
+    </div>
+
+    <!-- Seção: Dissertativo -->
+    <div id="dissertativo" class="section">
+        <h2>Texto Dissertativo-Argumentativo</h2>
+        <p>
+O texto argumentativo tem como principal objetivo persuadir o leitor acerca das ideias apresentadas pelo autor. Para alcançar esse propósito, é fundamental empregar estratégias argumentativas, como a utilização de dados, citações, referências históricas e outros recursos que reforcem o ponto de vista defendido.
+        </p>
+        <p>
+É importante destacar que, no Exame Nacional do Ensino Médio (Enem), na maioria dos vestibulares e em diversos concursos públicos, o gênero textual exigido é o dissertativo-argumentativo. <br>Isso significa que o candidato deve ser capaz de:
+
+<strong>Dissertar</strong>, ou seja, expor ideias, apresentar informações e contextualizar o tema;
+
+<strong>Argumentar</strong>, defendendo um ponto de vista de maneira clara, lógica e convincente.
+        </p>
+        <p>Uma redação dissertativa-argumentativa se divide em:</p>
+        <ul>
+            <li><strong>Introdução:</strong> Apresenta o problema e sua tese.</li>
+            </li>
+            <li><strong>Desenvolvimento:</strong> Defende sua ideia com argumentos.</li>
+            <li><strong>Conclusão:</strong> Resume tudo e propõe uma solução.</li>
+        </ul>
+        <button class="btn-voltar" onclick="fechar()">Voltar</button>
+    </div>
+
+    <!-- Seção: Jogo -->
+    <div id="jogo" class="section">
+        <h2>🎮 Desafio: Organize as Peças</h2>
+        <p>Arraste os conceitos para as caixas corretas:</p>
+        
+        <div style="display:flex; flex-wrap: wrap; gap:10px; margin-bottom: 20px;">
+            <div id="item1" class="drag-item" draggable="true" ondragstart="arrastar(event)" data-tipo="intro">Apresenta o Tema e a Tese</div>
+            <div id="item2" class="drag-item" draggable="true" ondragstart="arrastar(event)" data-tipo="desenv">Usa dados e fatos para convencer</div>
+            <div id="item3" class="drag-item" draggable="true" ondragstart="arrastar(event)" data-tipo="conclu">Sugere uma solução ou intervenção</div>
+        </div>
+
+        <div class="drop-zone" ondrop="soltar(event, 'intro')" ondragover="permitir(event)">Introdução vai aqui...</div>
+        <div class="drop-zone" ondrop="soltar(event, 'desenv')" ondragover="permitir(event)">Desenvolvimento vai aqui...</div>
+        <div class="drop-zone" ondrop="soltar(event, 'conclu')" ondragover="permitir(event)">Conclusão vai aqui...</div>
+
+        <p id="feedback-jogo" style="margin-top:15px; font-weight:bold;"></p>
+        <button class="btn-voltar" onclick="fechar()">Voltar</button>
+    </div>
+
+    <!-- Seção: Escrita -->
+    <div id="escrever" class="section">
+        <h2>✍️ Quero escrever minha Redação</h2>
+        <p><strong>Tema:</strong> <em>Por que eles bebem e dirigem?</em></p>
+        <p>
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/vLmgdE5D6Ko?si=48IkXd-hEwfChboO" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+        </p>
+        
+        <button onclick="document.getElementById('modalTexto').style.display='block'">📖 Leia o texto orientador</button>
+        
+        <div style="margin-top:20px;">
+            <label><strong>1. Introdução (Apresente o tema)</strong></label>
+            <textarea placeholder="Escreva sua tese..." oninput="contar(this, 'cnt1')"></textarea>
+            <div id="cnt1" style="font-size:0.8em; text-align:right;">0 caracteres</div>
+
+            <label><strong>2. Desenvolvimento (Seus argumentos)</strong></label>
+            <textarea placeholder="Use 'Além disso', 'Por outro lado'..." oninput="contar(this, 'cnt2')"></textarea>
+            <div id="cnt2" style="font-size:0.8em; text-align:right;">0 caracteres</div>
+
+            <label><strong>3. Conclusão (Proposta)</strong></label>
+            <textarea placeholder="Como resolver o problema?" oninput="contar(this, 'cnt3')"></textarea>
+            <div id="cnt3" style="font-size:0.8em; text-align:right;">0 caracteres</div>
+        </div>
+        
+        <button class="btn-voltar" onclick="fechar()">Finalizar</button>
+    </div>
+</main>
+
+<!-- Modal Texto de Apoio -->
+<div id="modalTexto" class="modal">
+    <div class="modal-content">
+        <h2>Por que eles bebem e dirigem?</h2>
+        <p>
+A adoção de uma lei seca mais rigorosa no Estado de São Paulo não bastou. Os dados da Secretaria de Segurança Pública revelam uma redução de quase 20% de acidentes com mortes no trânsito nos primeiros meses de 2012 para 2013 no Estado depois da lei, mas, no mesmo período dois acidentes impressionaram. Um deles amputou o braço de um jovem ciclista em plena Avenida Paulista, uma das principais artérias de São Paulo. O outro matou um garoto de 15 anos que andava de skate numa rua de Guarulhos, na grande São Paulo. Ambos foram vítimas de motoristas alcoolizados. O convívio de motoristas com ciclistas, motoqueiros, skatistas e pedestres nas ruas, cada vez mais estranguladas pelo trânsito nas médias e grandes cidades do país, se tornou insano. Quando a bebida entra nessa relação tensa, os efeitos são ainda mais catastróficos.
+
+        </p>
+        <p>
+           Várias propostas têm sido discutidas no mundo para reduzir a violência no trânsito. Em muitos países, ela é a principal causa de mortes entre os jovens. Entre as medidas, aumentar a carga tributária (e, por tabela, o preço das bebidas), diminuir os pontos de venda de álcool à noite, regulamentar a publicidade, fiscalizar com mais rigor e impor penas mais duras. Tudo isso parece causar um impacto inicial nos números. O grande desafio é aprimorar os resultados e torná-los permanentes.
+
+ 
+        </p>
+        <p>
+   Há questões estruturais importantes que devem, também, ser destacadas. Nas grandes cidades, transporte público de qualidade e barato, estendido madrugada adentro, que garanta um meio tranquilo de o jovem chegar em casa, é um deles. Criar áreas seguras nas ruas (com ciclovias protegidas) também pode ser uma medida importante. Alguns países estudam a instalação de detectores de álcool (uma espécie de bafômetro pessoal) acoplados a caminhões, ônibus e até carros particulares. Para ligar o motor, o próprio carro exige um controle do consumo de bebida.
+
+         
+        </p>
+        <p>
+        Além desses fatores, não se pode esquecer do comportamento. Mais que ensinar a guiar e a respeitar quem está nas ruas, a educação pelo trânsito deveria passar pela percepção do risco envolvido no ato de guiar embriagado ou sob efeitos de outras drogas. É aí que se esbarra numa das questões mais difíceis. Como sensibilizar o condutor do veículo, principalmente o jovem motorista, do risco que ele corre e, pior, que ele pode oferecer aos outros? Sem mexer nesse componente humano, de noção de responsabilidade e limite, será difícil solidificar as conquistas deste início de ano.    
+        </p>
+        <p>BOUER, Jairo. Época, p.81, 1º abr.2013.</p>
+        <button onclick="document.getElementById('modalTexto').style.display='none'">Fechar Leitura</button>
+    </div>
+</div>
+
+<footer>
+    <p><strong>Redação sem Complicação • Lira Dutra</strong></p>
+    <p>Projeto de Incentivo à Escrita para o Ensino Fundamental II</p>
+</footer>
+
+<script>
+    function abrir(id) {
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        window.scrollTo({ top: document.getElementById(id).offsetTop - 20, behavior: 'smooth' });
+    }
+
+    function fechar() {
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    }
+
+    function permitir(ev) { ev.preventDefault(); }
+    
+    function arrastar(ev) {
+        ev.dataTransfer.setData("textId", ev.target.id);
+        ev.dataTransfer.setData("tipo", ev.target.getAttribute('data-tipo'));
+    }
+
+    function soltar(ev, zonaTipo) {
+        ev.preventDefault();
+        const itemTipo = ev.dataTransfer.getData("tipo");
+        const itemId = ev.dataTransfer.getData("textId");
+        
+        if (itemTipo === zonaTipo) {
+            ev.target.innerHTML = "✅ " + document.getElementById(itemId).innerText;
+            ev.target.style.background = "#e8f5e9";
+            ev.target.style.borderColor = "#4caf50";
+            document.getElementById(itemId).style.display = "none";
+            verificarJogo();
+        } else {
+            document.getElementById('feedback-jogo').innerText = "❌ Tente outra posição!";
+            document.getElementById('feedback-jogo').style.color = "red";
+            setTimeout(() => { document.getElementById('feedback-jogo').innerText = ""; }, 2000);
+        }
+    }
+
+    function verificarJogo() {
+        const itensVisiveis = document.querySelectorAll('.drag-item[style*="display: none"]').length;
+        if (itensVisiveis === 3) {
+            document.getElementById('feedback-jogo').innerText = "🎉 Excelente! Você domina a estrutura!";
+            document.getElementById('feedback-jogo').style.color = "green";
+        }
+    }
+
+    function contar(el, id) {
+        document.getElementById(id).innerText = el.value.length + " caracteres";
+    }
+</script>
+
+</body>
+</html>
